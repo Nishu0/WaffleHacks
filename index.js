@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Define a route handler for the home page
 app.get('/', (req, res) => {
   // Render the EJS template
-  res.render('index.ejs');
+  res.render('index2.ejs');
 });
 
 // Set up Multer for handling file uploads
