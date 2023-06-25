@@ -1,0 +1,13 @@
+body {
+    color: #626262;
+    height: 100%;
+    font-size: 0.875rem;
+    background: #f1f2f3;
+    overflow-x: hidden;
+    overflow-y: auto;
+    letter-spacing: 0.0312rem;
+    font-family: 'Quicksand', sans-serif;
+}
+label, button { display:block; width:400px; margin-top:20px; }
+input, select { width:400px; padding:5px; border-radius:4px; margin-top:4px;}
+input::placeholder { color:#d3d3d3;} 
