@@ -1,4 +1,3 @@
-<!-- index2.ejs -->
 <html>
 <head>
     <title>WaffleHacks AI</title>
@@ -25,14 +24,15 @@
     <label for="astica_ML_file_input"><b>OR Select Local Image File</b> <small>(Slower, requires upload)</small></label>
     <input type="file" id="astica_ML_file_input" accept="image/*">
     <button id="astica_ML_capture_button" onclick="captureImageFromCamera();">Capture</button> <!-- Added capture button -->
-    <button id="astica_ML_save_button" onclick="saveImageToLocalDevice();">Save</button> <!-- Added save button -->
+    <button id="astica_ML_save_button" onclick="saveImageToLocalDevice();" style="display: none;">Save</button> <!-- Added save button with display none -->
     <hr>
     <button id="astica_demoSubmit" onclick="asticaVision_describeExample();">Describe Image</button>
 
     <img src="https://www.astica.org/img/icon.png" id="astica_ML_vision_input" style="display: none; width:300px;  margin:40px 0px;"></textarea>
-
+    <h4 id="astica_ML_caption_output" style="display:none;"></h4> <!-- Added h4 tag for displaying caption -->
     <h2 id="astica_ML_vision_output_title" style="display:none;">Output:</h2>
     <pre id="astica_ML_vision_output" style="display:none;"></pre>
+
 
     <script>
         function asticaVision_describeExample() {
@@ -67,7 +67,12 @@
             document.getElementById("astica_ML_vision_input").style.display = 'block';
             document.getElementById("astica_ML_vision_output").textContent = JSON.stringify(data, null, 2);
             document.getElementById("astica_ML_vision_output").scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-            console.log(data); //view all data
+
+            const caption = data.caption_GPTS;
+            if (caption) {
+                document.getElementById("astica_ML_caption_output").textContent = caption;
+                document.getElementById("astica_ML_caption_output").style.display = 'block';
+            }
         }
 
         document.getElementById("astica_ML_file_input").addEventListener("change", async function() {
@@ -116,17 +121,19 @@
 
                 document.body.appendChild(videoElement);
                 document.body.appendChild(canvasElement);
-                
+
                 const captureButton = document.getElementById("astica_ML_capture_button");
                 captureButton.disabled = true;
 
                 const saveButton = document.getElementById("astica_ML_save_button");
                 saveButton.disabled = false;
+                saveButton.style.display = "block"; // Show the save button
 
                 saveButton.addEventListener('click', () => {
                     const context = canvasElement.getContext('2d');
                     context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
                     const imageDataUrl = canvasElement.toDataURL();
+                    saveButton.disabled = true;
                     saveImageToCloudinary(imageDataUrl);
                 });
             } catch (error) {
@@ -149,7 +156,7 @@
                 document.getElementById("astica_ML_analyze_input").value = data.imageUrl;
                 asticaVision_describeExample();
             } catch (error) {
-                console.error("Error:", error);
+                console.error("Error uploading image to Cloudinary:", error);
             }
         }
 
